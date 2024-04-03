@@ -1,0 +1,41 @@
+* tailmacs
+
+#+html: <p align="center"><img src="tailmacs-logo.svg" /></p>
+
+tailmacs is a [[https://github.com/magit/magit][magit]]-inspired interface for managing your [[https://tailscale.com/kb/1136/tailnet][tailnet]] in Emacs. The UI is [[https://www.gnu.org/software/emacs/manual/html_mono/transient.html][transient]]-driven and depends on [[https://www.gnu.org/software/tramp/][TRAMP]] for remote connections.
+
+** Requirements
+
+- [[https://tailscale.com/kb/1080/cli][Tailscale CLI]]
+- [[https://login.tailscale.com/admin/settings/keys][Tailscale access token]] (used to retrieve device list via API)
+
+** Installation
+
+*** Download the package
+
+Not currently available on MELPA.
+
+Use =package-vc-install= and enter =https://github.com/ben-maclaurin/tailmacs=.
+
+*** Set your access token
+
+[[https://login.tailscale.com/admin/settings/keys][Create a token]], then in your init file:
+
+#+begin_src elisp
+  (require 'tailmacs)
+  (setq tailmacs-access-token "<token>")
+  (setq tailmacs-organization "<organization>") ;; usually the e-mail associated with your Tailscale account
+#+end_src
+
+Then run:
+
+=M-x tailmacs=
+
+** Features
+
+- Connect to any machine via [[https://www.gnu.org/software/tramp/][TRAMP]]
+- [[https://tailscale.com/kb/1242/tailscale-serve][Serve]] content and local servers on your tailnet
+- [[https://tailscale.com/kb/1223/funnel][Funnel]] content and local servers on the internet
+- Quickly visit any machine's MagicDNS URL
+
+
