@@ -57,7 +57,7 @@
 ;;;###autoload
 (transient-define-prefix tailmacs ()
   "Begin using Tailmacs."
-  ["Options" ("-m" "Machine" "machine=" :choices tailmacs--device-names :always-read t)]
+  ["Target" ("-m" "Machine" "machine=" :choices tailmacs--device-names :always-read t)]
   ["TRAMP" ("t" "Connect to machine via TRAMP" (lambda () (interactive) (transient-save) (tailmacs-tramp)) :transient t)]
   ["Commands" ("s" "Serve content and local servers on your tailnet" tailmacs-serve) ("f" "Serve content and local servers on the internet" tailmacs-funnel)]
   ["Visit" ("o" "Visit MagicDNS URL in default browser" tailmacs--browse-magic-dns-url) ("e" "Visit MagicDNS URL in EWW" tailmacs--eww-browse-magic-dns-url)])
@@ -127,7 +127,7 @@
 (transient-define-prefix tailmacs-tramp ()
   "Open transient menu for Tailmacs TRAMP."
   :value '("user=root" "dir=~/")
-  ["Options"
+  ["Arguments"
    ("-u" "user" "user=")
    ("-d" "directory" "dir=")]
   

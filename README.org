@@ -39,4 +39,9 @@ Then run:
 - [[https://tailscale.com/kb/1223/funnel][Funnel]] content and local servers on the internet
 - Quickly visit any machine's MagicDNS URL
 
+** Screenshot + demo video
+
+[[file:tailmacs.png]]
+
+[[https://youtu.be/VdigBnVnfX4][Video demo on YT]]
 
