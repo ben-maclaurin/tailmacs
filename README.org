@@ -2,6 +2,8 @@
 
 #+html: <p align="center"><img src="tailmacs-logo.svg" /></p>
 
+[[file:tailmacs.png]]
+
 tailmacs is a [[https://github.com/magit/magit][magit]]-inspired interface for managing your [[https://tailscale.com/kb/1136/tailnet][tailnet]] in Emacs. The UI is [[https://www.gnu.org/software/emacs/manual/html_mono/transient.html][transient]]-driven and depends on [[https://www.gnu.org/software/tramp/][TRAMP]] for remote connections.
 
 ** Requirements
@@ -38,10 +40,6 @@ Then run:
 - [[https://tailscale.com/kb/1242/tailscale-serve][Serve]] content and local servers on your tailnet
 - [[https://tailscale.com/kb/1223/funnel][Funnel]] content and local servers on the internet
 - Quickly visit any machine's MagicDNS URL
-
-** Screenshot + demo video
-
-[[file:tailmacs.png]]
 
 [[https://youtu.be/VdigBnVnfX4][Video demo on YT]]
 
