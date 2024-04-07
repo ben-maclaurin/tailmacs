@@ -36,7 +36,7 @@ Then run:
 
 ** Features
 
-- Connect to any machine via [[https://www.gnu.org/software/tramp/][TRAMP]]
+- Connect to SSH-enabled machines via [[https://www.gnu.org/software/tramp/][TRAMP]]
 - [[https://tailscale.com/kb/1242/tailscale-serve][Serve]] content and local servers on your tailnet
 - [[https://tailscale.com/kb/1223/funnel][Funnel]] content and local servers on the internet
 - Quickly visit any machine's MagicDNS URL
