@@ -3,7 +3,7 @@
 ;; Copyright (C) 2021-2024 Free Software Foundation, Inc.
 
 ;; Author: Ben MacLaurin <ben@maclaurin.email>
-;; Maintainer: Ben MacLaurinr <ben@maclaurin.email>
+;; Maintainer: Ben MacLaurin <ben@maclaurin.email>
 ;; Created: 2024
 ;; Version: 0.01
 ;; Package-Requires: ((emacs "29") (magit "3.3.0") (plz "0.7"))
