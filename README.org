@@ -8,6 +8,7 @@ tailmacs is a [[https://github.com/magit/magit][magit]]-inspired interface for m
 
 - [[https://tailscale.com/kb/1080/cli][Tailscale CLI]]
 - [[https://login.tailscale.com/admin/settings/keys][Tailscale access token]] (used to retrieve device list via API)
+- [[https://github.com/magit/transient][magit/transient]]
 
 ** Installation
 
