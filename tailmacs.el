@@ -66,13 +66,13 @@
   :transient t
   (interactive (list (transient-args 'tailmacs)))
   (let ((args (transient-args (oref transient-current-prefix command))))
-    (browse-url (concat "https://" (transient-arg-value "machine=" (transient-args transient-current-command)) "." (tailmacs--magic-dns-name)))))
+    (browse-url (concat "https://" (transient-arg-value "machine=" (transient-args transient-current-command)) "." (tailmacs--magic-dns-domain-name)))))
 
 (transient-define-suffix tailmacs--eww-browse-magic-dns-url (args)
   :transient t
   (interactive (list (transient-args 'tailmacs)))
   (let ((args (transient-args (oref transient-current-prefix command))))
-    (eww (concat "https://" (transient-arg-value "machine=" (transient-args transient-current-command)) "." (tailmacs--magic-dns-name)))))
+    (eww (concat "https://" (transient-arg-value "machine=" (transient-args transient-current-command)) "." (tailmacs--magic-dns-domain-name)))))
               
 ;; == Utility ==
 
@@ -82,18 +82,18 @@
               (car (split-string domain-name "\\."))))
           (tailmacs--api-get-devices)))
 
-(defun tailmacs--device-names-long ()
+(defun tailmacs--device-domain-names ()
   (mapcar (lambda (device)
             (let ((domain-name (alist-get 'name device)))
               domain-name))
           (tailmacs--api-get-devices)))
 
-(defun tailmacs--magic-dns-name ()
+(defun tailmacs--magic-dns-domain-name ()
   (interactive)
-  (string-join (cdr (split-string (car (tailmacs--device-names-long)) "\\.")) "."))
+  (string-join (cdr (split-string (car (tailmacs--device-domain-names)) "\\.")) "."))
 
-(defun tailmacs--shell-command-on-remote-machine (machine command)
-  (let ((default-directory (expand-file-name (concat "/ssh:" "root@" machine ":~/"))))
+(defun tailmacs--shell-command-on-remote-machine (remote-machine command)
+  (let ((default-directory (expand-file-name (concat "/ssh:" "root@" remote-machine ":~/"))))
     (with-connection-local-variables
      (message "%s" (shell-command-to-string command)))))
 
@@ -147,7 +147,7 @@
 
 ;;;###autoload
 (transient-define-prefix tailmacs-serve ()
-  ["Serve command flags"
+  ["Flags"
    ("-https" "Expose an HTTPS server at the specified port." "--https=")
    ("-HTTP" "Expose an HTTP server at the specified port." "--http=")
    ("-tcp" "Expose a TCP forwarder to forward TCP packets at the specified port." "--tcp=")
@@ -196,7 +196,7 @@
 
 ;;;###autoload
 (transient-define-prefix tailmacs-funnel ()
-  ["Funnel command flags"
+  ["Flags"
    ("-https" "Expose an HTTPS server at the specified port." "--https=")
    ("-HTTP" "Expose an HTTP server at the specified port." "--http=")
    ("-tcp" "Expose a TCP forwarder to forward TCP packets at the specified port." "--tcp=")
