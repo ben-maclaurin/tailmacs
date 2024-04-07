@@ -155,7 +155,7 @@
 
   ["Sub-commands" ("S" "status" tailmacs--serve-status) ("r" "reset" tailmacs--serve-reset)]
 
-  [("p" "serve port" tailmacs--serve-port)]
+  ["Commands" ("p" "serve port" tailmacs--serve-port)]
   ["DWIM commands" ("s" "serve file at point" tailmacs--serve-file-at-point)])
 
 ;; (transient-define-suffix tailmacs--serve-file (args)
