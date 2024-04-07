@@ -4,7 +4,7 @@
 
 [[file:tailmacs.png]]
 
-tailmacs is a [[https://github.com/magit/magit][magit]]-inspired interface for managing your [[https://tailscale.com/kb/1136/tailnet][tailnet]] in Emacs. The UI is [[https://www.gnu.org/software/emacs/manual/html_mono/transient.html][transient]]-based and uses on [[https://www.gnu.org/software/tramp/][TRAMP]] for remote connections.
+tailmacs is a [[https://github.com/magit/magit][magit]]-inspired interface for managing your [[https://tailscale.com/kb/1136/tailnet][tailnet]] in Emacs. The UI is [[https://www.gnu.org/software/emacs/manual/html_mono/transient.html][transient]]-based and uses [[https://www.gnu.org/software/tramp/][TRAMP]] for remote connections.
 
 ** Requirements
 
