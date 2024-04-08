@@ -229,7 +229,7 @@
 (transient-define-suffix tailmacs--funnel-reset (args)
   :transient t
   (interactive (list (transient-args 'tailmacs-funnel)))
-  (tailmacs--run-command-as-root
+  (tailmacs--shell-command-on-remote-machine
    (transient-arg-value "machine=" (transient-args 'tailmacs))
    "tailscale funnel reset")
   (message "Command sent"))
@@ -237,7 +237,7 @@
 (transient-define-suffix tailmacs--funnel-status (args)
   :transient t
   (interactive (list (transient-args 'tailmacs-funnel)))
-  (tailmacs--run-command-as-root
+  (tailmacs--shell-command-on-remote-machine
    (transient-arg-value "machine=" (transient-args 'tailmacs))
    "tailscale funnel status"))
 
