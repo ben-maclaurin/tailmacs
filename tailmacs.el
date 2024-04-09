@@ -60,26 +60,13 @@
   :incompatible '(("machine=" "local"))
   ["Target" ("m" "Machine" "machine=" :choices tailmacs--device-names :always-read t) ("l" "Local" "local")]
   ["TRAMP" ("t" "Connect to machine via TRAMP" (lambda () (interactive) (transient-save) (tailmacs--tramp-dispatch)))]
-  ["Commands" ("s" "Serve content and local servers on your tailnet" tailmacs-serve) ("f" "Serve content and local servers on the internet" tailmacs-funnel)]
-  ["Visit" ("o" "Visit MagicDNS URL in default browser" tailmacs--browse-magic-dns-url) ("e" "Visit MagicDNS URL in EWW" tailmacs--eww-browse-magic-dns-url)])
-
+  ["Commands" ("s" "Serve content and local servers on your tailnet" tailmacs-serve) ("f" "Serve content and local servers on the internet" tailmacs-funnel)])
+  
 (defun tailmacs--tramp-dispatch ()
   (if (transient-arg-value "local" (transient-args transient-current-command))
       (dired default-directory)
     (tailmacs-tramp)))
 
-(transient-define-suffix tailmacs--browse-magic-dns-url (args)
-  :transient t
-  (interactive (list (transient-args 'tailmacs)))
-  (let ((args (transient-args (oref transient-current-prefix command))))
-    (browse-url (concat "https://" (transient-arg-value "machine=" (transient-args transient-current-command)) "." (tailmacs--magic-dns-domain-name)))))
-
-(transient-define-suffix tailmacs--eww-browse-magic-dns-url (args)
-  :transient t
-  (interactive (list (transient-args 'tailmacs)))
-  (let ((args (transient-args (oref transient-current-prefix command))))
-    (eww (concat "https://" (transient-arg-value "machine=" (transient-args transient-current-command)) "." (tailmacs--magic-dns-domain-name)))))
-              
 ;; == Utility ==
 
 (defun tailmacs--device-names ()
