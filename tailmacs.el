@@ -59,9 +59,14 @@
   "Begin using Tailmacs."
   :incompatible '(("machine=" "local"))
   ["Target" ("m" "Machine" "machine=" :choices tailmacs--device-names :always-read t) ("l" "Local" "local")]
-  ["TRAMP" ("t" "Connect to machine via TRAMP" (lambda () (interactive) (transient-save) (tailmacs-tramp)))] 
+  ["TRAMP" ("t" "Connect to machine via TRAMP" (lambda () (interactive) (transient-save) (tailmacs--tramp-dispatch)))]
   ["Commands" ("s" "Serve content and local servers on your tailnet" tailmacs-serve) ("f" "Serve content and local servers on the internet" tailmacs-funnel)]
   ["Visit" ("o" "Visit MagicDNS URL in default browser" tailmacs--browse-magic-dns-url) ("e" "Visit MagicDNS URL in EWW" tailmacs--eww-browse-magic-dns-url)])
+
+(defun tailmacs--tramp-dispatch ()
+  (if (transient-arg-value "local" (transient-args transient-current-command))
+      (dired default-directory)
+    (tailmacs-tramp)))
 
 (transient-define-suffix tailmacs--browse-magic-dns-url (args)
   :transient t
