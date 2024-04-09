@@ -59,7 +59,7 @@
   "Begin using Tailmacs."
   :incompatible '(("machine=" "local"))
   ["Target" ("m" "Machine" "machine=" :choices tailmacs--device-names :always-read t) ("l" "Local" "local")]
-  ["TRAMP" ("t" "Connect to machine via TRAMP" (lambda () (interactive) (transient-save) (tailmacs-tramp)) :transient t)]
+  ["TRAMP" ("t" "Connect to machine via TRAMP" (lambda () (interactive) (transient-save) (tailmacs-tramp)))] 
   ["Commands" ("s" "Serve content and local servers on your tailnet" tailmacs-serve) ("f" "Serve content and local servers on the internet" tailmacs-funnel)]
   ["Visit" ("o" "Visit MagicDNS URL in default browser" tailmacs--browse-magic-dns-url) ("e" "Visit MagicDNS URL in EWW" tailmacs--eww-browse-magic-dns-url)])
 
@@ -157,7 +157,7 @@
   ["Sub-commands" ("S" "status" tailmacs--serve-status) ("r" "reset" tailmacs--serve-reset)]
 
   ["Commands" ("p" "serve port" tailmacs--serve-port)]
-  ["DWIM commands" ("s" "serve file at point" tailmacs--serve-file-at-point)])
+  ["DWIM commands" ("s" "serve file at point" tailmacs--serve-file-at-point :if-mode dired-mode)])
   
 (transient-define-suffix tailmacs--serve-file-at-point (args)
   :transient t
@@ -200,7 +200,7 @@
   ["Sub-commands" ("s" "status" tailmacs--funnel-status) ("r" "reset" tailmacs--funnel-reset)]
 
   ["Commands" ("p" "funnel port" tailmacs--funnel-port)]
-  ["DWIM commands" ("f" "funnel file at point" tailmacs--funnel-file-at-point)])
+  ["DWIM commands" ("f" "funnel file at point" tailmacs--funnel-file-at-point :if-mode dired-mode)])
 
 (transient-define-suffix tailmacs--funnel-file-at-point (args)
   :transient t
