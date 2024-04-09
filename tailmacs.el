@@ -67,6 +67,18 @@
       (dired default-directory)
     (tailmacs-tramp)))
 
+(transient-define-suffix tailmacs--browse-magic-dns-url (args)
+  :transient t
+  (interactive (list (transient-args 'tailmacs)))
+  (let ((args (transient-args (oref transient-current-prefix command))))
+    (browse-url (concat "https://" (transient-arg-value "machine=" (transient-args transient-current-command)) "." (tailmacs--magic-dns-domain-name)))))
+
+(transient-define-suffix tailmacs--eww-browse-magic-dns-url (args)
+  :transient t
+  (interactive (list (transient-args 'tailmacs)))
+  (let ((args (transient-args (oref transient-current-prefix command))))
+    (eww (concat "https://" (transient-arg-value "machine=" (transient-args transient-current-command)) "." (tailmacs--magic-dns-domain-name)))))
+              
 ;; == Utility ==
 
 (defun tailmacs--device-names ()
