@@ -57,7 +57,8 @@
 ;;;###autoload
 (transient-define-prefix tailmacs ()
   "Begin using Tailmacs."
-  ["Target" ("m" "Machine" "machine=" :choices tailmacs--device-names :always-read t)]
+  :incompatible '(("machine=" "local"))
+  ["Target" ("m" "Machine" "machine=" :choices tailmacs--device-names :always-read t) ("l" "Local" "local")]
   ["TRAMP" ("t" "Connect to machine via TRAMP" (lambda () (interactive) (transient-save) (tailmacs-tramp)) :transient t)]
   ["Commands" ("s" "Serve content and local servers on your tailnet" tailmacs-serve) ("f" "Serve content and local servers on the internet" tailmacs-funnel)]
   ["Visit" ("o" "Visit MagicDNS URL in default browser" tailmacs--browse-magic-dns-url) ("e" "Visit MagicDNS URL in EWW" tailmacs--eww-browse-magic-dns-url)])
