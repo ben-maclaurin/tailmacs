@@ -158,12 +158,6 @@
 
   ["Commands" ("p" "serve port" tailmacs--serve-port)]
   ["DWIM commands" ("s" "serve file at point" tailmacs--serve-file-at-point)])
-
-;; (transient-define-suffix tailmacs--serve-file (args)
-;;   :transient t
-;;   (interactive (list (transient-args 'tailmacs-serve)))
-;;   (let ((filename (read-file-name "Path: " (concat "/ssh:" "root@" (transient-arg-value "machine=" (transient-args 'tailmacs)) ":~/"))))
-;;     (tailmacs--run "tailscale serve --bg" filename 'transient-args)))
   
 (transient-define-suffix tailmacs--serve-file-at-point (args)
   :transient t
@@ -208,12 +202,6 @@
   ["Commands" ("p" "funnel port" tailmacs--funnel-port)]
   ["DWIM commands" ("f" "funnel file at point" tailmacs--funnel-file-at-point)])
 
-;; (transient-define-suffix tailmacs--funnel-file (args)
-;;   :transient t
-;;   (interactive (list (transient-args 'tailmacs-serve)))
-;;   (let ((filename (read-file-name "Path: " (concat "/ssh:" "root@" (transient-arg-value "machine=" (transient-args 'tailmacs)) ":~/"))))
-;;     (tailmacs--run "tailscale funnel --bg" filename 'transient-args)))
-  
 (transient-define-suffix tailmacs--funnel-file-at-point (args)
   :transient t
   (interactive (list (transient-args 'tailmacs-serve)))
