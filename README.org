@@ -13,8 +13,6 @@
 
 *** Download the package
 
-Not currently available on MELPA.
-
 Use =package-vc-install= and enter =https://github.com/ben-maclaurin/tailmacs=.
 
 *** Set your access token
