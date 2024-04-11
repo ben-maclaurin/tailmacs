@@ -30,7 +30,7 @@ Use =package-vc-install= and enter =https://github.com/ben-maclaurin/tailmacs=.
 - Connect to SSH-enabled machines via [[https://www.gnu.org/software/tramp/][TRAMP]]
 - [[https://tailscale.com/kb/1242/tailscale-serve][Serve]] content and local servers on your tailnet
 - [[https://tailscale.com/kb/1223/funnel][Funnel]] content and local servers on the internet
-- Quickly visit any machine's MagicDNS URL
+- DWIM commands available in dired-mode
 
 https://github.com/ben-maclaurin/tailmacs/assets/54992484/63a8ff8d-c742-4c8a-b6a1-cf47a3fc3458
 
