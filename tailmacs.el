@@ -97,21 +97,16 @@
 	      ""))
 	  tailscale-args))
 
+(defconst tailscale-args (list "--https" "--http" "--tcp" "--tls-terminated-tcp"))
+
 (defun tailmacs--run (tailscale-command filename transient-args)
   (tailmacs--shell-command-on-remote-machine
    (transient-arg-value "machine=" (transient-args 'tailmacs))
    (concat tailscale-command " "
-	   (mapconcat 'identity (tailmacs--format-args
-				 (list
-				  "--https"
-				  "--http"
-				  "--tcp"
-				  "--tls-terminated-tcp")
-				 transient-args)
-		      " ")
-	   (tailmacs--clean-file-path filename))))
+	   (mapconcat 'identity (tailmacs--format-args tailscale-args transient-args) " ")
+	   (tailmacs--clean-remote-file-path filename))))
 
-(defun tailmacs--clean-file-path (path)
+(defun tailmacs--clean-remote-file-path (path)
  (replace-regexp-in-string (concat "/ssh:" "root@" (transient-arg-value "machine=" (transient-args 'tailmacs)) ":") "" path))
 
 ;; == Tramp ==
