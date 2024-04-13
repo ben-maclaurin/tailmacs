@@ -107,9 +107,9 @@
 	   (if (transient-arg-value "--tls-terminated-tcp=" (transient-args transient-current-command))
 	       (concat "--tls-terminated-tcp " (transient-arg-value "--tls-terminated-tcp=" (transient-args transient-current-command)) " ")
 	     "")
-	   (clean-file-path filename))))
+	   (tailmacs--clean-file-path filename))))
 
-(defun clean-file-path (path)
+(defun tailmacs--clean-file-path (path)
  (replace-regexp-in-string (concat "/ssh:" "root@" (transient-arg-value "machine=" (transient-args 'tailmacs)) ":") "" path))
 
 ;; == Tramp ==
