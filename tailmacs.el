@@ -90,23 +90,25 @@
     (with-connection-local-variables
      (message "%s" (shell-command-to-string command)))))
 
+(defun tailmacs--format-args (tailscale-args transient-args)
+  (mapcar (lambda (item)
+	    (if (transient-arg-value (concat item "=") (transient-args transient-current-command))
+		(concat item " " (transient-arg-value (concat item "=") (transient-args transient-current-command)))
+	      ""))
+	  tailscale-args))
+
 (defun tailmacs--run (tailscale-command filename transient-args)
   (tailmacs--shell-command-on-remote-machine
    (transient-arg-value "machine=" (transient-args 'tailmacs))
    (concat tailscale-command " "
-	   ;; Improve this
-	   (if (transient-arg-value "--https=" (transient-args transient-current-command))
-	       (concat "--https " (transient-arg-value "--https=" (transient-args transient-current-command)) " ")
-	     "")
-	   (if (transient-arg-value "--http=" (transient-args transient-current-command))
-	       (concat "--http " (transient-arg-value "--http=" (transient-args transient-current-command)) " ")
-	     "")
-	   (if (transient-arg-value "--tcp=" (transient-args transient-current-command))
-	       (concat "--tcp " (transient-arg-value "--tcp=" (transient-args transient-current-command)) " ")
-	     "")
-	   (if (transient-arg-value "--tls-terminated-tcp=" (transient-args transient-current-command))
-	       (concat "--tls-terminated-tcp " (transient-arg-value "--tls-terminated-tcp=" (transient-args transient-current-command)) " ")
-	     "")
+	   (mapconcat 'identity (tailmacs--format-args
+				 (list
+				  "--https"
+				  "--http"
+				  "--tcp"
+				  "--tls-terminated-tcp")
+				 transient-args)
+		      " ")
 	   (tailmacs--clean-file-path filename))))
 
 (defun tailmacs--clean-file-path (path)
@@ -148,7 +150,7 @@
 
   ["Commands" ("p" "serve port" tailmacs--serve-port)]
   ["DWIM commands" ("s" "serve file at point" tailmacs--serve-file-at-point :if-mode dired-mode)])
-  
+
 (transient-define-suffix tailmacs--serve-file-at-point (args)
   :transient t
   (interactive (list (transient-args 'tailmacs-serve)))
