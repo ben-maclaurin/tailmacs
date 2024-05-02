@@ -21,7 +21,7 @@ Use =package-vc-install= and enter =https://github.com/ben-maclaurin/tailmacs=.
 
 #+begin_src elisp
   (require 'tailmacs)
-  (setq tailmacs-access-token "<token>")
+  (setq tailmacs-access-token "<token>") ;; ⚠️ recommended that you use a more secure method of storage
   (setq tailmacs-organization "<organization>") ;; usually the e-mail associated with your Tailscale account
 #+end_src
 
