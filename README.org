@@ -6,7 +6,7 @@
 
 ** Requirements
 
-- [[https://tailscale.com/kb/1080/cli][Tailscale CLI]]
+- [[https://tailscale.com/kb/1080/cli][Tailscale CLI]] (ships with the Tailscale app) 
 - [[https://login.tailscale.com/admin/settings/keys][Tailscale access token]] (used to retrieve device list via API)
   
 ** Installation
