@@ -2,7 +2,7 @@
 
 #+html: <img src="https://upload.wikimedia.org/wikipedia/commons/b/bb/Prehensile_%28PSF%29.png" align="right" width="30%">
 
-/tailmacs is a Tailscale porcelain for managing your [[https://tailscale.com/kb/1136/tailnet][tailnet]] within Emacs. The UI is [[https://www.gnu.org/software/emacs/manual/html_mono/transient.html][transient]]-based and uses [[https://www.gnu.org/software/tramp/][TRAMP]] for remote connections./
+/tailmacs is a Tailscale porcelain for Emacs. The UI is [[https://www.gnu.org/software/emacs/manual/html_mono/transient.html][transient]]-based and uses [[https://www.gnu.org/software/tramp/][TRAMP]] for remote connections./
 
 ** Requirements
 
