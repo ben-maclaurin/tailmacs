@@ -37,6 +37,34 @@
 (require 'plz)
 (require 'json)
 
+;; == Cache ==
+
+(defvar tailmacs--devices-cache nil
+  "Cached device list from Tailscale API.")
+
+(defvar tailmacs--devices-cache-time nil
+  "Time when the device cache was last updated.")
+
+(defcustom tailmacs-cache-ttl 60
+  "Time-to-live for device cache in seconds."
+  :group 'tailmacs
+  :type 'integer)
+
+(defun tailmacs--cache-valid-p ()
+  "Return non-nil if the device cache is still valid."
+  (and tailmacs--devices-cache
+       tailmacs--devices-cache-time
+       (< (- (float-time) tailmacs--devices-cache-time) tailmacs-cache-ttl)))
+
+(defun tailmacs-invalidate-cache ()
+  "Invalidate all caches, forcing a refresh on next access."
+  (interactive)
+  (setq tailmacs--devices-cache nil
+        tailmacs--devices-cache-time nil
+        tailmacs--parsed-names-cache nil
+        tailmacs--parsed-names-cache-time nil)
+  (message "Tailmacs device cache invalidated"))
+
 ;; == Tailmacs ==
 
 (defgroup tailmacs nil
@@ -69,45 +97,70 @@
 
 ;; == Utility ==
 
+(defvar tailmacs--parsed-names-cache nil
+  "Cached parsed device names (short names and magic DNS domain).")
+
+(defvar tailmacs--parsed-names-cache-time nil
+  "Time when parsed names cache was last updated.")
+
+(defun tailmacs--ensure-parsed-names ()
+  "Parse device names from cache, computing short names and magic DNS domain once."
+  (when (or (null tailmacs--parsed-names-cache)
+            (null tailmacs--parsed-names-cache-time)
+            (not (equal tailmacs--parsed-names-cache-time tailmacs--devices-cache-time)))
+    (let* ((devices (tailmacs--api-get-devices))
+           (first-domain (and devices (alist-get 'name (car devices))))
+           (domain-parts (and first-domain (cdr (split-string first-domain "\\.")))))
+      (setq tailmacs--parsed-names-cache
+            (list :short-names (mapcar (lambda (device)
+                                         (car (split-string (alist-get 'name device) "\\.")))
+                                       devices)
+                  :domain-names (mapcar (lambda (device) (alist-get 'name device)) devices)
+                  :magic-dns (and domain-parts (string-join domain-parts ".")))
+            tailmacs--parsed-names-cache-time tailmacs--devices-cache-time)))
+  tailmacs--parsed-names-cache)
+
 (defun tailmacs--device-names ()
-  (mapcar (lambda (device)
-            (let ((domain-name (alist-get 'name device)))
-              (car (split-string domain-name "\\."))))
-          (tailmacs--api-get-devices)))
+  "Get list of short device names."
+  (plist-get (tailmacs--ensure-parsed-names) :short-names))
 
 (defun tailmacs--device-domain-names ()
-  (mapcar (lambda (device)
-            (let ((domain-name (alist-get 'name device)))
-              domain-name))
-          (tailmacs--api-get-devices)))
+  "Get list of full device domain names."
+  (plist-get (tailmacs--ensure-parsed-names) :domain-names))
 
 (defun tailmacs--magic-dns-domain-name ()
+  "Get the magic DNS domain name for the tailnet."
   (interactive)
-  (string-join (cdr (split-string (car (tailmacs--device-domain-names)) "\\.")) "."))
+  (plist-get (tailmacs--ensure-parsed-names) :magic-dns))
 
 (defun tailmacs--shell-command-on-remote-machine (remote-machine command)
-  (let ((default-directory (expand-file-name (concat "/ssh:" "root@" remote-machine ":~/"))))
+  (let ((default-directory (expand-file-name (format "/ssh:root@%s:~/" remote-machine))))
     (with-connection-local-variables
      (message "%s" (shell-command-to-string command)))))
 
 (defun tailmacs--format-args (tailscale-args transient-args)
-  (mapcar (lambda (item)
-	    (if (transient-arg-value (concat item "=") (transient-args transient-current-command))
-		(concat item " " (transient-arg-value (concat item "=") (transient-args transient-current-command)))
-	      ""))
-	  tailscale-args))
+  (let ((current-args (transient-args transient-current-command)))
+    (delq nil
+          (mapcar (lambda (item)
+                    (let* ((key (concat item "="))
+                           (value (transient-arg-value key current-args)))
+                      (when value
+                        (format "%s %s" item value))))
+                  tailscale-args))))
 
 (defconst tailscale-args (list "--https" "--http" "--tcp" "--tls-terminated-tcp"))
 
 (defun tailmacs--run (tailscale-command filename transient-args)
-  (tailmacs--shell-command-on-remote-machine
-   (transient-arg-value "machine=" (transient-args 'tailmacs))
-   (concat tailscale-command " "
-	   (mapconcat 'identity (tailmacs--format-args tailscale-args transient-args) " ")
-	   (tailmacs--clean-remote-file-path filename))))
+  (let ((machine (transient-arg-value "machine=" (transient-args 'tailmacs))))
+    (tailmacs--shell-command-on-remote-machine
+     machine
+     (format "%s %s%s"
+             tailscale-command
+             (mapconcat #'identity (tailmacs--format-args tailscale-args transient-args) " ")
+             (tailmacs--clean-remote-file-path filename machine)))))
 
-(defun tailmacs--clean-remote-file-path (path)
- (replace-regexp-in-string (concat "/ssh:" "root@" (transient-arg-value "machine=" (transient-args 'tailmacs)) ":") "" path))
+(defun tailmacs--clean-remote-file-path (path machine)
+  (replace-regexp-in-string (format "/ssh:root@%s:" machine) "" path))
 
 ;; == Tramp ==
 
@@ -221,11 +274,21 @@
 ;; == API ==
 
 (defun tailmacs--api (endpoint)
-  (concat "https://api.tailscale.com/api/v2/tailnet/" tailmacs-organization endpoint))
+  (format "https://api.tailscale.com/api/v2/tailnet/%s%s" tailmacs-organization endpoint))
 
 (defun tailmacs--api-get-devices ()
-  (cdr (car (plz 'get (tailmacs--api "/devices")
-    :headers (list (cons "Authorization" (format "Bearer %s" tailmacs-access-token)))
-    :as #'json-read))))
+  "Fetch devices from Tailscale API with caching and error handling."
+  (if (tailmacs--cache-valid-p)
+      tailmacs--devices-cache
+    (condition-case err
+        (let ((devices (cdr (car (plz 'get (tailmacs--api "/devices")
+                                      :headers `(("Authorization" . ,(format "Bearer %s" tailmacs-access-token)))
+                                      :as #'json-read)))))
+          (setq tailmacs--devices-cache devices
+                tailmacs--devices-cache-time (float-time))
+          devices)
+      (error
+       (message "Tailmacs: API request failed: %s" (error-message-string err))
+       (or tailmacs--devices-cache '())))))
 
 ;;; tailmacs.el ends here
